@@ -102,5 +102,9 @@ app.post('/login', (req, res) => {
   })(req, res);
 })
 
+app.get('/', jwtMW, (req, res) => {
+  console.log("Web Token Checked.")
+ // res.send('You are authenticated'); 
+});
 
 module.exports = app;
