@@ -9,7 +9,8 @@ const mongoose = require("mongoose");
 const jwt = require('jsonwebtoken');
 const exjwt = require('express-jwt');
 const helmet = require('helmet');
-const passport = require("passport");
+const passport = require('passport');
+require('./config/passport');
 const User = require('./model');
 require('dotenv').config();
 
@@ -66,7 +67,7 @@ app.post('/signup', (req, res) => {
       if (err) return res.json(err);
   
       console.log("User created: " + result);
-      let token = jwt.sign({ username: user.username }, process.env.JWT_SECRET, { expiresIn: 129600 }); 
+      let token = jwt.sign({ username: user.username }, process.env.JWT_SECRET, { expiresIn: '1d' }); 
         return res.json({
           success: true,
           err: null,
@@ -74,6 +75,31 @@ app.post('/signup', (req, res) => {
         });
     });
   })
+})
+
+app.post('/login', (req, res) => {
+  passport.authenticate("local", {session: false}, (err, user) => {
+    if (err) {
+      res.json(false);
+      return;
+    }
+    
+    if (user) { 
+      console.log("Valid!");
+      let token = jwt.sign({ username: user.username }, process.env.JWT_SECRET, { expiresIn: '1d' }); 
+        res.json({
+          success: true,
+          err: null,
+          token
+        });
+    } else {
+      res.status(401).json({
+        success: false,
+        token: null,
+        err: 'Password and hash do not match!'
+      });
+    }
+  })(req, res);
 })
 
 
