@@ -18,13 +18,13 @@ class App extends React.Component {
     let name = this.props.confirm.username;
 
     return (
-      <div className="App">
-        <div className="main-page">
-          <div className="top-section">
+      <div className="wrapper">
+        <div className="box">
+          <div className="header">
             <h1>Welcome, {name}</h1>
           </div>
-          <div className="bottom-section">
-            <button onClick={this.handleLogout}> LOG OUT </button>
+          <div>
+            <button className="submit" onClick={this.handleLogout}> log out </button>
           </div>
         </div>
       </div>
