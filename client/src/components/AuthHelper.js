@@ -65,7 +65,8 @@ export default class AuthHelper {
       ...options
     })
       .then(this.checkStatus)
-      .then(response => response.json());
+      .then(response => response.json())
+      .catch(err =>  alert("Sorry, credentials don't exist!"));
   };
 
   checkStatus = res => {
