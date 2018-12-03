@@ -2,20 +2,23 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import axios from "axios";
 import AuthHelper from './AuthHelper';
+import sanitize from '../methods/sanitize';
 
 export default class Signup extends React.Component {
   Auth = new AuthHelper();
+  constructor(props) {
+    super(props);
 
-  state = {
+    this.state = {
       username: "",
       password: ""
+    }
   }
 
   handleChange = (e) => {
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]:  sanitize(e.target.value)
     })
-    console.log(this.state);
   }
 
   handleFormSubmit = (e) => {
@@ -25,9 +28,12 @@ export default class Signup extends React.Component {
       username: this.state.username,
       password: this.state.password
     })
-    .then(data => {
-      console.log(data);
-      this.props.history.replace("/login");
+    .then(res =>  {
+      this.Auth.setToken(res.data.token); 
+      this.props.history.replace("/");
+    })
+    .catch(err => {
+      console.log(err);
     });
   }
 
@@ -44,17 +50,28 @@ export default class Signup extends React.Component {
                 placeholder="username"
                 name="username"
                 type="text"
+                required
                 onChange={this.handleChange}
               />
               <input
                 placeholder="password"
                 name="password"
                 type="password"
+                required
                 onChange={this.handleChange}
               />
-              <button className="submit" onClick={this.handleFormSubmit}> sign up </button>
             </form>
-            <Link className="link" to="/login"> Already have an account? <span className="link-signup">Log in</span></Link>
+            <div id="buttons">
+                  <button className="submit" onClick={this.handleFormSubmit}> log in </button>
+                  <button className="fb">
+                    <a href={`http://localhost:3001/auth/facebook?link=${window.location.origin}/socialauthredirect`}>
+                      <span className="iconFB"></span> facebook
+                   </a>
+                  </button>
+                </div>
+            <Link className="link" to="/login"> have an account? 
+              <span className="signup-link"> log in </span>
+            </Link>
           </div>
         </div>
       </React.Fragment>

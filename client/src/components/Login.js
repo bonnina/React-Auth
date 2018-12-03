@@ -1,18 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import AuthHelper from './AuthHelper';
+import sanitize from '../methods/sanitize';
 
 class Login extends React.Component {
   Auth = new AuthHelper();
+  constructor(props) {
+    super(props);
 
-    state = {
+    this.state = {
       username: "",
       password: ""
     }
+  }
 
     handleChange = (e) => {
       this.setState({
-        [e.target.name]: e.target.value
+        [e.target.name]: sanitize(e.target.value)
       })
     }
 
@@ -50,17 +54,28 @@ class Login extends React.Component {
                   placeholder="username"
                   name="username"
                   type="text"
+                  required
                   onChange={this.handleChange}
                 />
                 <input
                   placeholder="password"
                   name="password"
                   type="password"
+                  required
                   onChange={this.handleChange}
                 />
-                <button className="submit" onClick={this.handleFormSubmit}> log in </button>
-              </form>
-              <Link className="link" to="/signup">Don't have an account? <span className="link-signup">Sign up</span></Link>
+                </form>
+                <div id="buttons">
+                  <button className="submit" onClick={this.handleFormSubmit}> log in </button>
+                  <button className="fb">
+                    <a href={`http://localhost:3001/auth/facebook?link=${window.location.origin}/socialauthredirect`}>
+                      <span className="iconFB"></span> facebook
+                   </a>
+                  </button>
+                </div>
+              <Link className="link" to="/signup"> don't have an account? 
+                <span className="signup-link"> sign up </span>
+              </Link>
             </div>
           </div>
         </React.Fragment>
