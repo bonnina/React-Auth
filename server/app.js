@@ -10,9 +10,10 @@ const jwt = require('jsonwebtoken');
 const exjwt = require('express-jwt');
 const helmet = require('helmet');
 const passport = require('passport');
+const router = express.Router();
 require('dotenv').config();
 require('./config/passport');
-require('./methods/tokenAndRedirect');
+const generateTokenAndRedirect = require('./methods/tokenAndRedirect');
 const User = require('./models/userModel');
 
 const app = express();
@@ -32,6 +33,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(helmet());
 
+
+
 const jwtMW = exjwt({
   secret: process.env.JWT_SECRET
 });
@@ -40,7 +43,6 @@ mongoose.connect(process.env.DATABASE, { useNewUrlParser: true });
 const db = mongoose.connection;
 db.once("open", () => console.log("connected to the database"));
 db.on("error", () => console.log("MongoDB connection error"));
-
 
 app.post('/signup', (req, res) => {
   const { username, password } = req.body;
@@ -89,6 +91,7 @@ app.post('/login', (req, res) => {
   })(req, res);
 })
 
+
 app.get('/', jwtMW, (req, res) => {
   res.send('Web Token Checked'); 
 });
@@ -104,7 +107,7 @@ app.get("/auth/facebook/callback", (req, res, next) => {
     generateTokenAndRedirect(req, res, next, err, user, info)
   )(req, res, next);
 });
-
+/*
 app.use(function(req, res, next) {
   next(createError(404));
 });
@@ -114,5 +117,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
+*/
 module.exports = app;
