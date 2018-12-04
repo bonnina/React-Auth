@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken');
+
 const generateTokenAndRedirect = (req, res, next, err, user) => {
   if (err) {
     return next(err);
@@ -9,3 +11,5 @@ const generateTokenAndRedirect = (req, res, next, err, user) => {
     return res.redirect(`${req.query.state}`);
   }
 };
+
+module.exports = generateTokenAndRedirect;
