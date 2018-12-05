@@ -27,7 +27,7 @@ export default class AuthHelper {
         return true;
       } else return false;
     } catch (err) {
-      console.log("token expired");
+      console.log("token invalid or expired");
       return false;
     }
   };
