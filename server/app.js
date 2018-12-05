@@ -4,17 +4,14 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt');
 const mongoose = require("mongoose");
-const jwt = require('jsonwebtoken');
-const exjwt = require('express-jwt');
 const helmet = require('helmet');
 const passport = require('passport');
-const router = express.Router();
 require('dotenv').config();
-require('./config/passport');
-const generateTokenAndRedirect = require('./methods/tokenAndRedirect');
-const User = require('./models/userModel');
+const indexRouter = require('./routes/index');
+const signupRouter = require('./routes/signup');
+const loginRouter = require('./routes/login');
+const authFbRouter = require('./routes/authFB');
 
 const app = express();
 
@@ -33,81 +30,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(helmet());
 
+app.use('/', indexRouter);
+app.use('/signup', signupRouter);
+app.use('/login', loginRouter);
+app.use('/auth/facebook', authFbRouter);
 
-
-const jwtMW = exjwt({
-  secret: process.env.JWT_SECRET
-});
-
+// database connection
 mongoose.connect(process.env.DATABASE, { useNewUrlParser: true });
 const db = mongoose.connection;
 db.once("open", () => console.log("connected to the database"));
 db.on("error", () => console.log("MongoDB connection error"));
 
-app.post('/signup', (req, res) => {
-  const { username, password } = req.body;
-  const saltRounds = 12;
-
-  bcrypt.hash(password, saltRounds, function (err, hash) {
-    const user = new User();
-    user.username = username;
-    user.password = hash;
-
-    user.save((err, result) => {
-      if (err) return res.json(err);
-  
-      let token = jwt.sign({ username: user.username }, process.env.JWT_SECRET, { expiresIn: '1d' }); 
-        return res.json({
-          success: true,
-          err: null,
-          token
-        });
-    });
-  })
-})
-
-app.post('/login', (req, res) => {
-  passport.authenticate("local", {session: false}, (err, user) => {
-    if (err) {
-      res.json(false);
-      return;
-    }
-    
-    if (user) { 
-      console.log("Valid!");
-      let token = jwt.sign({ username: user.username }, process.env.JWT_SECRET, { expiresIn: '1d' }); 
-        res.json({
-          success: true,
-          err: null,
-          token
-        });
-    } else {
-      res.status(401).json({
-        success: false,
-        token: null,
-        err: 'Password and hash do not match!'
-      });
-    }
-  })(req, res);
-})
-
-
-app.get('/', jwtMW, (req, res) => {
-  res.send('Web Token Checked'); 
-});
-
-app.get("/auth/facebook", (req, res, next) => {
-  passport.authenticate("facebook", {
-    state: req.query.link
-  })(req, res, next);
-});
-
-app.get("/auth/facebook/callback", (req, res, next) => {
-  passport.authenticate("facebook", (err, user, info) =>
-    generateTokenAndRedirect(req, res, next, err, user, info)
-  )(req, res, next);
-});
-/*
+// error handling
 app.use(function(req, res, next) {
   next(createError(404));
 });
@@ -117,5 +51,5 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-*/
+
 module.exports = app;
