@@ -67,11 +67,11 @@ class Login extends React.Component {
                 </form>
                 <div id="buttons">
                   <button className="submit" onClick={this.handleFormSubmit}> log in </button>
-                  <button className="fb">
-                    <a href={`http://localhost:3001/auth/facebook?link=${window.location.origin}/socialauthredirect`}>
+                  <a href={`http://localhost:3001/auth/facebook?link=${window.location.origin}/socialauthredirect`}>
+                    <button className="fb">
                       <span className="iconFB"></span> facebook
+                    </button>
                    </a>
-                  </button>
                 </div>
               <Link className="link" to="/signup"> don't have an account? 
                 <span className="signup-link"> sign up </span>

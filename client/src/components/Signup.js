@@ -34,6 +34,7 @@ export default class Signup extends React.Component {
     })
     .catch(err => {
       console.log(err);
+      alert('Sorry, this username alredy exists')
     });
   }
 
@@ -62,13 +63,13 @@ export default class Signup extends React.Component {
               />
             </form>
             <div id="buttons">
-                  <button className="submit" onClick={this.handleFormSubmit}> log in </button>
-                  <button className="fb">
-                    <a href={`http://localhost:3001/auth/facebook?link=${window.location.origin}/socialauthredirect`}>
-                      <span className="iconFB"></span> facebook
-                   </a>
-                  </button>
-                </div>
+              <button className="submit" onClick={this.handleFormSubmit}> sign up </button>
+              <a href={`http://localhost:3001/auth/facebook?link=${window.location.origin}/socialauthredirect`}>
+                <button className="fb">
+                  <span className="iconFB"></span> facebook
+                </button>
+              </a>
+            </div>
             <Link className="link" to="/login"> have an account? 
               <span className="signup-link"> log in </span>
             </Link>
