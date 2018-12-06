@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
 const helmet = require('helmet');
 const passport = require('passport');
+const cors = require('cors');
 require('dotenv').config();
 const indexRouter = require('./routes/index');
 const signupRouter = require('./routes/signup');
@@ -29,6 +30,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(helmet());
+app.use(cors());
+// app.options('*', cors());  
 
 app.use('/', indexRouter);
 app.use('/signup', signupRouter);
