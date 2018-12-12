@@ -1,6 +1,6 @@
 import React from 'react';
 import AuthHelper from './components/AuthHelper';
-import withAuth from './components/withAuth';
+// import withAuth from './components/withAuth';
 
 class App extends React.Component {
   Auth = new AuthHelper();
@@ -32,4 +32,4 @@ class App extends React.Component {
   }
 }
 
-export default withAuth(App);
+export default App;
