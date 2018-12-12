@@ -17,14 +17,14 @@ export default class Signup extends React.Component {
 
   handleChange = (e) => {
     this.setState({
-      [e.target.name]:  sanitize(e.target.value)
+      [e.target.name]: sanitize(e.target.value)
     })
   }
 
   handleFormSubmit = (e) => {
     e.preventDefault();
       
-    axios.post("/signup", {
+    axios.post(`${process.env.REACT_APP_AWS_REGISTER}`, {
       username: this.state.username,
       password: this.state.password
     })

@@ -3,7 +3,7 @@ import decode from 'jwt-decode'
 export default class AuthHelper {
  
   login = (username, password) => {
-    return this.fetch(`/login`, {
+    return this.fetch(`${process.env.REACT_APP_AWS_SIGNIN}`, {
       method: "POST",
       body: JSON.stringify({
         username,
